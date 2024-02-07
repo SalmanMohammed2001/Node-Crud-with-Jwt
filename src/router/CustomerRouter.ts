@@ -7,5 +7,6 @@ router.post("/create",CustomerController.save)
 router.get("/find-by-id/:id",CustomerController.finById)
 router.put("/update-by-id/:id",CustomerController.update)
 router.delete("/delete-by-id/:id",CustomerController.deleteById)
+router.get("/find-all",CustomerController.findAll)
 
 export default router

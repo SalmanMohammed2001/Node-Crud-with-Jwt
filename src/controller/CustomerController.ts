@@ -55,3 +55,34 @@ export const update=(req:any,res:any)=>{
         return res.status(500).json({message:'customer not delete'})
     }
 }
+
+
+export  const findAll=(req:any,res:any)=>{
+    try{
+
+        const {searchText,page=1,size=10}=req.query;
+        const pageNumber=parseInt(page)
+        const pageSize=parseInt(size)
+
+        const query={};
+        if(searchText){
+            // @ts-ignore
+            query.$text={$search:searchText}
+        }
+
+        const skip=(pageNumber-1) * pageSize;
+
+        CustomerSchema.find(query)
+            .limit(pageSize)
+            .skip(skip).then((response: any)=>{
+            return res.status(200).json(response);
+        })
+
+
+    }catch(error){
+
+        return res.status(500).json(error)
+
+    }
+
+}
