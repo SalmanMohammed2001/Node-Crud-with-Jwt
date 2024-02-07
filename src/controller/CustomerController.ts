@@ -30,3 +30,22 @@ export  const finById=(req:any,res:any)=>{
         return   res.status(500).json({message:'save customer',error:error})
     })
 }
+
+const update=(req:any,res:any)=>{
+    CustomerSchema.findOneAndUpdate({'_id':req.params.id},{
+        $set:{
+            nic:req.body.nic,
+            name:req.body.name,
+            address:req.body.address,
+            salary:req.body.salary,
+        }
+    },{new:true}).then((update:any)=>{
+        if(update){
+            res.status(201).json({status:true,message:'customer update'})
+        }else {
+            res.status(201).json({status:false,message:'Try again'})
+        }
+    }).catch((error: any)=>{
+        res.status(500).json(error)
+    })
+}
