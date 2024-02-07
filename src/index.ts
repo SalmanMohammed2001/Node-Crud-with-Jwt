@@ -13,6 +13,7 @@ const port:string | undefined =process.env.SERVER_PORT |8080
 
 
 import UserRouter from '../src/router/UserRouter'
+import CustomerRouter from "../src/router/CustomerRouter";
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/node_crud').then(()=>{
@@ -22,4 +23,5 @@ mongoose.connect('mongodb://127.0.0.1:27017/node_crud').then(()=>{
 })
 
 app.use("/api/v1/users",UserRouter)
+app.use("/api/v1/customers",CustomerRouter)
 

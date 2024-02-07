@@ -1,9 +1,11 @@
-//const CustomerSchema=require('../model/CustomerSchema')
-import * as CustomerSchema from '../model/CustomerSchema'
+const CustomerSchema=require('../model/CustomerSchema')
+
 
 export const save=(req:any,res:any)=>{
 
-    // @ts-ignore
+    console.log(req.body)
+
+
     const tempCustomer=new CustomerSchema({
         nic:req.body.nic,
         name:req.body.name,
@@ -15,5 +17,6 @@ export const save=(req:any,res:any)=>{
     }).catch((error:any)=>{
         return   res.status(500).json({message:'save customer',error:error})
     })
+
 
 }
