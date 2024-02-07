@@ -3,6 +3,7 @@ import {request} from "express";
 
 const UserSchema=require('../model/UserSchema')
 const bcrypt=require('bcrypt')
+const jsonWebToken=require('jsonwebtoken')
 
 
  export  const register  = async (req:any,res:any)=>{
@@ -28,14 +29,27 @@ const bcrypt=require('bcrypt')
 
       })
 
+  }else {
+      return res.status(409).json({error:'already exists!'})
   }
+}
 
 
-
-
-
-
-
+export const login=(req:any,res:any)=>{
+     UserSchema.findOne({email:req.body.email}).then((selectedUser:any)=>{
+         if(selectedUser!=null){
+             bcrypt.compare(req.body.password,selectedUser.password,function (err:any,result:any){
+                 if(result){
+                   const  SECRET_KEY="dfcznckasjnaskncdsakndaskjdnaskdaksndasjdnaskncd"
+                     const expiresIn=3600;
+                     const token=  jsonWebToken.sign({'email':selectedUser.email},
+                         SECRET_KEY,{expiresIn});
+                     res.setHeader("Authorization",`Bearer ${token}`)
+                     return res.status(200).json({token})
+                 }
+             })
+         }
+     })
 }
 
 

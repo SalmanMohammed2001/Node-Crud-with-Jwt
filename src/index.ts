@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // @ts-ignore
-const port:string | undefined =process.env.SERVER_PORT | 8080
+const port:string | undefined =process.env.SERVER_PORT |8080
 
 
 import UserRouter from '../src/router/UserRouter'
