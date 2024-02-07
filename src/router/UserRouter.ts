@@ -3,3 +3,5 @@ import express from 'express'
 const router=express.Router()
 
 router.post("/signup",UserController.register)
+
+export default  router;
