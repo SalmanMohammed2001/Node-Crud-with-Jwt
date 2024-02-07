@@ -2,10 +2,6 @@ const CustomerSchema=require('../model/CustomerSchema')
 
 
 export const save=(req:any,res:any)=>{
-
-    console.log(req.body)
-
-
     const tempCustomer=new CustomerSchema({
         nic:req.body.nic,
         name:req.body.name,
@@ -48,4 +44,14 @@ export const update=(req:any,res:any)=>{
     }).catch((error: any)=>{
         res.status(500).json(error)
     })
+}
+
+ export const deleteById=async (req:any,res:any)=>{
+    console.log(req.param('id'))
+    const  deleteData= await CustomerSchema.findByIdAndDelete({'_id':req.param('id')})
+    if(deleteData){
+        res.status(204).json({message:'customer delete'})
+    }else{
+        return res.status(500).json({message:'customer not delete'})
+    }
 }
