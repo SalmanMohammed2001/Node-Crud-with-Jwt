@@ -31,7 +31,7 @@ export  const finById=(req:any,res:any)=>{
     })
 }
 
-const update=(req:any,res:any)=>{
+export const update=(req:any,res:any)=>{
     CustomerSchema.findOneAndUpdate({'_id':req.params.id},{
         $set:{
             nic:req.body.nic,
