@@ -27,14 +27,14 @@ const db=  require('../databaseConnect/databaseConnection')
 
 
 
-/*
 
-const findCustomer=(req,resp)=>{
-    console.log(req.params.nic);
-    let nic=req.params.nic
 
-    const findQuery='SELECT * FROM customer WHERE nic=?'
-    db.query(findQuery,[nic],(error,result)=>{
+ export  const findCustomer=(req:any,resp:any)=>{
+
+    let id=req.params.id
+
+    const findQuery='SELECT * FROM customer WHERE id=?'
+    db.query(findQuery,[id],(error:any,result:any)=>{
 
         if(error){
             return resp.status(500).json({error:'something went wrong'})
@@ -47,26 +47,28 @@ const findCustomer=(req,resp)=>{
 }
 
 
-const updateCustomer=(req,resp)=>{
 
-    const findQuery='SELECT * FROM customer WHERE nic=?'
-    db.query(findQuery,[req.body.nic],(error,result)=>{
+ export const updateCustomer=(req:any,resp:any)=>{
+
+    const findQuery='SELECT * FROM customer WHERE id=?'
+    db.query(findQuery,[req.body.id],(error:any,result:any)=>{
 
         if(error){
             return resp.status(500).json({error:'something went wrong'})
         }else{
 
             const customers={
+                id:req.body.id,
                 nic:req.body.nic,
                 name:req.body.name,
                 address:req.body.address,
-                salary:req.body.salary
+                salary:req.body.salary,
             }
 
-            const updateQuery='UPDATE customer SET name=?,address=?,salary=? WHERE nic=?';
+            const updateQuery='UPDATE customer SET nic=?,name=?,address=?,salary=? WHERE id=?';
             db.query(updateQuery,[
-                customers.name,customers.address,customers.salary,customers.nic
-            ],(error,result)=>{
+              customers.nic,customers.name,customers.address,customers.salary,customers.id
+            ],(error:any,result:any)=>{
                 if(error){
                     console.log(error);
                     return resp.status(500).json({error:'somethong wnt Wrong'})
@@ -81,6 +83,7 @@ const updateCustomer=(req,resp)=>{
 
 }
 
+/*
 const deleteCustomer=(req,resp)=>{
     let nic=req.params.nic;
 
