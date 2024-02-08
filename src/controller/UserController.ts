@@ -71,8 +71,25 @@ export  const register  = async (req:any,res:any)=>{
 
 
 
-export const login=(req:any,res:any)=>{
-    /* UserSchema.findOne({email:req.body.email}).then((selectedUser:any)=>{
+export const login=  (req:any,res:any)=>{
+
+    const email=req.body.email
+    const findQuery ='SELECT * FROM user WHERE email=?'
+     db.query(findQuery,[email],(error:any,selectedUser:any)=>{
+        if(selectedUser){
+            bcrypt.compare(req.body.password,selectedUser[0].password,function (err:any,result:any){
+                   const  SECRET_KEY="dfcznckasjnaskncdsakndaskjdnaskdaksndasjdnaskncd"
+                    const expiresIn=3600;
+                    const token=  jsonWebToken.sign({'email':selectedUser[0].email},
+                        SECRET_KEY,{expiresIn});
+                    res.setHeader("Authorization",`Bearer ${token}`)
+                    return res.status(200).json({token})
+                }
+            )}
+
+    })
+
+/*     UserSchema.findOne({email:req.body.email}).then((selectedUser:any)=>{
          if(selectedUser!=null){
              bcrypt.compare(req.body.password,selectedUser.password,function (err:any,result:any){
                  if(result){
@@ -88,6 +105,25 @@ export const login=(req:any,res:any)=>{
      })*/
 }
 
+
+/*
+export const login=(req:any,res:any)=>{
+    UserSchema.findOne({email:req.body.email}).then((selectedUser:any)=>{
+        if(selectedUser!=null){
+            bcrypt.compare(req.body.password,selectedUser.password,function (err:any,result:any){
+                if(result){
+                    const  SECRET_KEY="dfcznckasjnaskncdsakndaskjdnaskdaksndasjdnaskncd"
+                    const expiresIn=3600;
+                    const token=  jsonWebToken.sign({'email':selectedUser.email},
+                        SECRET_KEY,{expiresIn});
+                    res.setHeader("Authorization",`Bearer ${token}`)
+                    return res.status(200).json({token})
+                }
+            })
+        }
+    })
+}
+*/
 
 
 
