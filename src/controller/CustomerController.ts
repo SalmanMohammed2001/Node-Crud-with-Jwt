@@ -1,88 +1,120 @@
-const CustomerSchema=require('../model/CustomerSchema')
 
 
-export const save=(req:any,res:any)=>{
-    const tempCustomer=new CustomerSchema({
+const db=  require('../databaseConnect/databaseConnection')
+
+
+ export const createCustomer=(req:any,resp:any)=>{
+    let customer={
+        id:req.body.id,
         nic:req.body.nic,
         name:req.body.name,
         address:req.body.address,
         salary:req.body.salary,
-    });
-    tempCustomer.save().then((result:any)=>{
-        return   res.status(200).json({message:'save customer',data:result})
-    }).catch((error:any)=>{
-        return   res.status(500).json({message:'save customer',error:error})
-    })
-}
-
-export  const finById=(req:any,res:any)=>{
-    CustomerSchema.findOne({nic:req.params.id}).then((result:any)=>{
-        if(result!=null){
-            return res.status(201).json(result)
-        }else {
-            return res.status(500).json({message:'customer not found'})
-        }
-    }).catch((error:any)=>{
-        return   res.status(500).json({message:'save customer',error:error})
-    })
-}
-
-export const update=(req:any,res:any)=>{
-    CustomerSchema.findOneAndUpdate({'_id':req.params.id},{
-        $set:{
-            nic:req.body.nic,
-            name:req.body.name,
-            address:req.body.address,
-            salary:req.body.salary,
-        }
-    },{new:true}).then((update:any)=>{
-        if(update){
-            res.status(201).json({status:true,message:'customer update'})
-        }else {
-            res.status(201).json({status:false,message:'Try again'})
-        }
-    }).catch((error: any)=>{
-        res.status(500).json(error)
-    })
-}
-
- export const deleteById=async (req:any,res:any)=>{
-    console.log(req.param('id'))
-    const  deleteData= await CustomerSchema.findByIdAndDelete({'_id':req.param('id')})
-    if(deleteData){
-        res.status(204).json({message:'customer delete'})
-    }else{
-        return res.status(500).json({message:'customer not delete'})
-    }
-}
-
-
-export  const findAll=(req:any,res:any)=>{
-    try{
-
-        const {searchText,page=1,size=10}=req.query;
-        const pageNumber=parseInt(page)
-        const pageSize=parseInt(size)
-
-        const query={};
-        if(searchText){
-            // @ts-ignore
-            query.$text={$search:searchText}
-        }
-
-        const skip=(pageNumber-1) * pageSize;
-
-        CustomerSchema.find(query)
-            .limit(pageSize)
-            .skip(skip).then((response: any)=>{
-            return res.status(200).json(response);
-        })
-
-
-    }catch(error){
-
-        return res.status(500).json(error)
-
     }
 
+    console.log(customer);
+
+    const createQuery='INSERT INTO customer VALUES(?,?,?,?,?)';
+    db.query(createQuery,[
+        customer.id,customer.nic,customer.name,customer.address,customer.salary
+    ],(error:any,result:any)=>{
+        if(error){
+            return resp.status(500).json({error:'somethong wnt Wrong'})
+        }
+        return resp.status(201).json({message:'customer saved'})
+    })
 }
+
+
+
+
+
+ export  const findCustomer=(req:any,resp:any)=>{
+
+    let id=req.params.id
+
+    const findQuery='SELECT * FROM customer WHERE id=?'
+    db.query(findQuery,[id],(error:any,result:any)=>{
+
+        if(error){
+            return resp.status(500).json({error:'something went wrong'})
+        }else{
+            return resp.status(200).json({message:'customer details',data:result})
+        }
+
+    })
+
+}
+
+
+
+ export const updateCustomer=(req:any,resp:any)=>{
+
+    const findQuery='SELECT * FROM customer WHERE id=?'
+    db.query(findQuery,[req.body.id],(error:any,result:any)=>{
+
+        if(error){
+            return resp.status(500).json({error:'something went wrong'})
+        }else{
+
+            const customers={
+                id:req.body.id,
+                nic:req.body.nic,
+                name:req.body.name,
+                address:req.body.address,
+                salary:req.body.salary,
+            }
+
+            const updateQuery='UPDATE customer SET nic=?,name=?,address=?,salary=? WHERE id=?';
+            db.query(updateQuery,[
+              customers.nic,customers.name,customers.address,customers.salary,customers.id
+            ],(error:any,result:any)=>{
+                if(error){
+                    console.log(error);
+                    return resp.status(500).json({error:'somethong wnt Wrong'})
+                }
+                return resp.status(201).json({message:'customer update'})
+            })
+
+
+        }
+
+    })
+
+}
+
+
+export  const deleteCustomer=(req:any,resp:any)=>{
+    let id=req.params.id;
+
+    const deleteQuery='DELETE FROM customer WHERE id=?';
+
+    db.query(deleteQuery,[id],(error:any,result:any)=>{
+
+        if(error){
+            console.log(error);
+            return resp.status(500).json({error:'somethong wnt Wrong'})
+        }
+
+        return resp.status(204).json({message:'customer delete'})
+    })
+
+}
+
+export const findAllCustomer=(req:any,res:any)=>{
+
+    const findAllQuery='SELECT * FROM customer'; //==> pagination
+    db.query(findAllQuery,(error:any,result:any)=>{
+
+        if(error){
+            console.log(error);
+            return res.status(500).json({error:'somethong wnt Wrong'})
+        }
+
+        return res.status(200).json({message:'customer all',data:result})
+    })
+
+}
+
+
+
