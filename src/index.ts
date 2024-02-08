@@ -16,10 +16,16 @@ import UserRouter from '../src/router/UserRouter'
 import CustomerRouter from "../src/router/CustomerRouter";
 
 
+/*
 mongoose.connect('mongodb://127.0.0.1:27017/node_crud').then(()=>{
     app.listen(port,()=>{
         console.log(`server port running ${port}`)
     })
+})
+*/
+
+app.listen(port,()=>{
+    console.log(`server up & running on port${port}`);
 })
 
 app.use("/api/v1/users",UserRouter)
